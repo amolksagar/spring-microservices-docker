@@ -1,0 +1,143 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Customer Registration API
+  description: Customer Registration API
+host: localhost:8080
+basePath: com/devprojects/springmicroservicesdocker/api/v1
+schemes:
+- http
+produces:
+- application/json
+consumes:
+- application/json
+paths:
+  /registercar:
+    post:
+      tags:
+      - Register Car details
+      description: Register a Car and get history
+      operationId: register
+      parameters:
+      - in: body
+        name: car
+        description: The user to create.
+        schema:
+          $ref: '#/definitions/Car'
+      responses:
+        200:
+          $ref: '#/definitions/200CarDetailsResponse'
+        400:
+          $ref: '#/responses/400ErrorResponse'
+        404:
+          $ref: '#/responses/404ErrorResponse'
+        500:
+          $ref: '#/responses/500ErrorResponse'
+responses:
+  200CarDetailsResponse:
+    description: UsersList response
+    schema:
+      $ref: '#/definitions/CarDetails'
+  400ErrorResponse:
+    description: Bad Request
+    schema:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/definitions/Error'
+  404ErrorResponse:
+    description: Resource Not Found
+    schema:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/definitions/Error'
+  500ErrorResponse:
+    description: Internal Server Error
+    schema:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/definitions/Error'
+definitions:
+  Car:
+    type: object
+    description: Car details to be registered
+    properties:
+      make:
+        type: string
+        description: Make of the Car
+      model:
+        type: string
+        description: Model of the Car
+      yearOfManufacturing:
+        type: string
+        description: Year of Manufacturing
+      kmsRun:
+        type: number
+        description: kms that the car has run
+      currentOwner:
+        type: object
+        description: Owner who is applying for the registration
+        schema:
+          $ref: '#/definitions/Owner'
+          
+  CarDetails:
+    type: object
+    description: Car details.
+    properties:
+      previousOwners:
+        type: array
+        items: 
+          type: string
+        description: previous owners of the car
+      debtOnCar:
+        type: number
+        description: Debt left on car
+      registrationExpiryDate:
+        type: string
+        description: registration Expiry Date
+        
+  Owner:
+    type: object
+    description: Owner details.
+    properties:
+      name:
+        type: string
+        description: owner of the car
+      dob:
+        type: string
+        description: date of Birth
+      phoneNumber:
+        type: string
+        description: phone number of the owner
+        
+  Error:
+    description: Represent an individual error.
+    type: object
+    properties:
+      code:
+        description: Error Code.
+        type: integer
+        format: int32
+      message:
+        description: Error Message
+        type: string
+      fields:
+        description: Comma separated list of fields, which caused the error condition.
+        type: string
